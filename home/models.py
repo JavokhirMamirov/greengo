@@ -52,7 +52,7 @@ class Invoice(models.Model):
     trip_rate = models.DecimalField(default=0, decimal_places=2, max_digits=10)
     notes = models.TextField(null=True, blank=True)
     date = models.DateTimeField(null=True, blank=True)
-    status = models.ForeignKey(InvoiceStatus, on_delete=models.CASCADE)
+    status = models.ForeignKey(InvoiceStatus, on_delete=models.CASCADE, default=InvoiceStatus.objects.first())
 
     def __str__(self):
         return self.board.name

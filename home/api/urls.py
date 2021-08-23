@@ -1,4 +1,6 @@
-from django.urls import path
+from django.urls import path, include
+from .router import router
 
-
-urlpatterns = []
+urlpatterns = [
+    path('', include(router.urls))
+]

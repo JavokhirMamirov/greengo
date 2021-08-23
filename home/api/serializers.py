@@ -27,13 +27,25 @@ class DriverSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class InvoiceStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InvoiceStatus
+        fields = '__all__'
+
+
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = '__all__'
 
 
-class InvoiceStatusSerializer(serializers.ModelSerializer):
+class InvoiceRelatedSerializer(serializers.ModelSerializer):
+    dispatcher = DispatcherSerializer(read_only=True)
+    board = BoardSerializer(read_only=True)
+    owner = OwnerOperatorSerializer(read_only=True)
+    driver = DriverSerializer(read_only=True)
+    status = InvoiceStatusSerializer(read_only=True)
+
     class Meta:
-        model = InvoiceStatus
+        model = Invoice
         fields = '__all__'
