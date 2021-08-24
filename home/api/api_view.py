@@ -1,10 +1,63 @@
+from django.contrib.auth.hashers import make_password
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
 from rest_framework.response import Response
 from .serializers import *
+
+
+@api_view(['GET'])
+@permission_classes([])
+@authentication_classes([])
+def login(request):
+    try:
+        username = request.GET.get('username')
+        password = request.GET.get('password')
+        try:
+            user = User.objects.get(username=username)
+            ps = make_password(password)
+            if user.check_password(password):
+                try:
+                    token = Token.objects.get(user=user)
+                except Token.DoesNotExist:
+                    token = Token.objects.create(user=user)
+                dt = {
+                    "id": user.id,
+                    "username": user.username,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "email": user.email,
+                    "token": token.key
+                }
+                data = {
+                    "success": True,
+                    "status": 200,
+                    "data": dt
+                }
+            else:
+                data = {
+                    "success": False,
+                    "status": 403,
+                    "error": "Password error!"
+                }
+
+        except User.DoesNotExist as err:
+            data = {
+                "success": False,
+                "status": 404,
+                "error": "{}".format(err)
+            }
+    except Exception as err:
+        data = {
+            "success": False,
+            "status": 500,
+            "error": "{}".format(err)
+        }
+    return Response(data)
 
 
 class CustomViewSet(viewsets.ModelViewSet):
