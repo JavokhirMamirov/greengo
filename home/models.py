@@ -37,6 +37,7 @@ class InvoiceStatus(models.Model):
     name = models.CharField(max_length=255)
     color = models.CharField(max_length=25)
     is_active = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
 
@@ -52,7 +53,7 @@ class Invoice(models.Model):
     trip_rate = models.DecimalField(default=0, decimal_places=2, max_digits=10)
     notes = models.TextField(null=True, blank=True)
     date = models.DateTimeField(null=True, blank=True)
-    status = models.ForeignKey(InvoiceStatus, on_delete=models.CASCADE, default=InvoiceStatus.objects.first())
+    status = models.ForeignKey(InvoiceStatus, on_delete=models.CASCADE, default=InvoiceStatus.objects.first().pk)
 
     def __str__(self):
         return self.board.name
