@@ -178,7 +178,6 @@ class CustomViewSet(viewsets.ModelViewSet):
         return Response(data)
 
 
-
 class DispatcherViewset(CustomViewSet):
     serializer_class = DispatcherSerializer
     queryset = Dispatcher.objects.all()

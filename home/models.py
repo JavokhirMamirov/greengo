@@ -5,26 +5,26 @@ from django.db import models
 
 
 class Dispatcher(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
     def __str__(self):
         return self.name
 
 
 class Board(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
     def __str__(self):
         return self.name
 
 class OwnerOperator(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
     def __str__(self):
         return self.name
 
 class Driver(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
     phone = models.CharField(max_length=50, null=True, blank=True)
     track_number = models.CharField(max_length=20, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
@@ -34,10 +34,9 @@ class Driver(models.Model):
         return self.name
 
 class InvoiceStatus(models.Model):
-    name = models.CharField(max_length=255)
-    color = models.CharField(max_length=25)
+    name = models.CharField(max_length=255, null=True)
+    color = models.CharField(max_length=25, null=True)
     is_active = models.BooleanField(default=True)
-
     def __str__(self):
         return self.name
 
@@ -53,7 +52,7 @@ class Invoice(models.Model):
     trip_rate = models.DecimalField(default=0, decimal_places=2, max_digits=10)
     notes = models.TextField(null=True, blank=True)
     date = models.DateTimeField(null=True, blank=True)
-    status = models.ForeignKey(InvoiceStatus, on_delete=models.CASCADE, default=InvoiceStatus.objects.first().pk)
+    status = models.ForeignKey(InvoiceStatus, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.board.name
