@@ -220,3 +220,10 @@ class InvoiceViewset(CustomViewSet):
     }
     search_fields = ('disptacher__name', 'driver__name')
     filter_fields = ('dispatcher', 'driver')
+
+class InvoiceStatusViewset(CustomViewSet):
+    serializer_class = InvoiceStatusSerializer
+    queryset = InvoiceStatus.objects.all()
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    search_fields = ('name',)
+    filter_fields = ('is_active',)
