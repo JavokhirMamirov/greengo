@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Dispatcher, Board, OwnerOperator, Driver, Invoice, InvoiceStatus
+from ..models import Dispatcher, Board, OwnerOperator, Driver, Invoice, InvoiceStatus, PdfFile
 
 
 class DispatcherSerializer(serializers.ModelSerializer):
@@ -39,6 +39,11 @@ class InvoiceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PdfFileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = PdfFile
+        fields = "__all__"
+
 class InvoiceRelatedSerializer(serializers.ModelSerializer):
     dispatcher = DispatcherSerializer(read_only=True)
     board = BoardSerializer(read_only=True)
@@ -49,3 +54,5 @@ class InvoiceRelatedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = '__all__'
+
+

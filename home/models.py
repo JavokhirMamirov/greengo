@@ -40,6 +40,10 @@ class InvoiceStatus(models.Model):
     def __str__(self):
         return self.name
 
+
+class PdfFile(models.Model):
+    file = models.FileField(upload_to='pdf/', null=True, blank=True)
+
 class Invoice(models.Model):
     dispatcher = models.ForeignKey(Dispatcher, on_delete=models.CASCADE)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
@@ -52,7 +56,10 @@ class Invoice(models.Model):
     trip_rate = models.DecimalField(default=0, decimal_places=2, max_digits=10)
     notes = models.TextField(null=True, blank=True)
     date = models.DateTimeField(null=True, blank=True)
+    documents = models.ManyToManyField(PdfFile)
     status = models.ForeignKey(InvoiceStatus, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.board.name
+
+

@@ -221,9 +221,89 @@ class InvoiceViewset(CustomViewSet):
     search_fields = ('disptacher__name', 'driver__name')
     filter_fields = ('dispatcher', 'driver')
 
+
 class InvoiceStatusViewset(CustomViewSet):
     serializer_class = InvoiceStatusSerializer
     queryset = InvoiceStatus.objects.all()
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('name',)
     filter_fields = ('is_active',)
+
+@api_view(['GET','POST','PUT','DELETE'])
+def pdf_file(request):
+    if request.method == "GET":
+        try:
+            invoice_id = request.GET.get('invoice_id')
+            invoice = Invoice.objects.get(id=invoice_id)
+            ser = PdfFileSerializers(invoice.documents.all(), many=True)
+            data = {
+                "success":True,
+                "data":ser.data
+            }
+        except Exception as err:
+            data = {
+                "success": False,
+                "error": "{}".format(err)
+            }
+        return Response(data)
+    elif request.method == "POST":
+        try:
+            file = request.data['file']
+            invoice_id = request.data.get('invoice_id')
+            invoice = Invoice.objects.get(id=invoice_id)
+            pdf = PdfFile.objects.create(
+                file=file
+            )
+            invoice.documents.add(pdf)
+            invoice.save()
+            ser = PdfFileSerializers(pdf)
+            data = {
+                "success": True,
+                "data": ser.data
+            }
+        except Exception as err:
+            data = {
+                "success": False,
+                "error": "{}".format(err)
+            }
+        return Response(data)
+    elif request.method == "PUT":
+        try:
+            file = request.data['file']
+            file_id = request.data.get('file_id')
+            pdf = PdfFile.objects.get(id=file_id)
+            pdf.file = file
+            pdf.save()
+            ser = PdfFileSerializers(pdf)
+            data = {
+                "success": True,
+                "data": ser.data
+            }
+        except Exception as err:
+            data = {
+                "success": False,
+                "error": "{}".format(err)
+            }
+        return Response(data)
+    else:
+        try:
+            file_id = request.data.get('file_id')
+            invoice_id = request.data.get('invoice_id')
+            pdf = PdfFile.objects.get(id=file_id)
+            invoice = Invoice.objects.get(id=invoice_id)
+            invoice.documents.remove(pdf)
+            invoice.save()
+            data = {
+                "success": True,
+                "data": {
+                    "file_id":file_id
+                }
+            }
+        except Exception as err:
+            data = {
+                "success": False,
+                "error": "{}".format(err)
+            }
+        return Response(data)
+
+
