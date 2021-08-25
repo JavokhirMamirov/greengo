@@ -37,12 +37,15 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = '__all__'
+        read_only_fields = ['documents', ]
 
 
 class PdfFileSerializers(serializers.ModelSerializer):
     class Meta:
         model = PdfFile
         fields = "__all__"
+
+
 
 class InvoiceRelatedSerializer(serializers.ModelSerializer):
     dispatcher = DispatcherSerializer(read_only=True)
@@ -54,5 +57,3 @@ class InvoiceRelatedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = '__all__'
-
-

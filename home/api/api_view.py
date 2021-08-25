@@ -217,9 +217,13 @@ class InvoiceViewset(CustomViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filterset_fields = {
         'date': ['gte', 'lte', 'exact', 'gt', 'lt'],
+        'dispatcher': ['exact'],
+        'driver': ['exact'],
+        'board': ['exact'],
+        'owner': ['exact'],
+        'status': ['exact'],
     }
-    search_fields = ('disptacher__name', 'driver__name')
-    filter_fields = ('dispatcher', 'driver')
+    search_fields = ('dispatcher__name', 'driver__name', 'owner__name')
 
 
 class InvoiceStatusViewset(CustomViewSet):
@@ -229,7 +233,8 @@ class InvoiceStatusViewset(CustomViewSet):
     search_fields = ('name',)
     filter_fields = ('is_active',)
 
-@api_view(['GET','POST','PUT','DELETE'])
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def pdf_file(request):
     if request.method == "GET":
         try:
@@ -237,8 +242,8 @@ def pdf_file(request):
             invoice = Invoice.objects.get(id=invoice_id)
             ser = PdfFileSerializers(invoice.documents.all(), many=True)
             data = {
-                "success":True,
-                "data":ser.data
+                "success": True,
+                "data": ser.data
             }
         except Exception as err:
             data = {
@@ -296,7 +301,7 @@ def pdf_file(request):
             data = {
                 "success": True,
                 "data": {
-                    "file_id":file_id
+                    "file_id": file_id
                 }
             }
         except Exception as err:
@@ -305,5 +310,3 @@ def pdf_file(request):
                 "error": "{}".format(err)
             }
         return Response(data)
-
-
