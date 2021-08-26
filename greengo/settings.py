@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'rest_framework',
     'django_filters',
+    'corsheaders',
     'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -71,8 +73,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'greengo.wsgi.application'
+CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
 
-# Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
