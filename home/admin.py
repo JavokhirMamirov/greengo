@@ -33,6 +33,10 @@ class DriverAdmin(admin.ModelAdmin):
 class InvoiceStatusAdmin(admin.ModelAdmin):
     list_display = ['name', 'id', 'color', "is_active"]
 
+@admin.register(Documents)
+class DocumentsAdmin(admin.ModelAdmin):
+    list_display = ['name', 'id', 'type']
+
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):

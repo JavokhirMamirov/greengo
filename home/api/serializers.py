@@ -1,12 +1,17 @@
 from rest_framework import serializers
 
-from ..models import Dispatcher, Board, OwnerOperator, Driver, Invoice, InvoiceStatus, PdfFile
+from ..models import Dispatcher, Board, OwnerOperator, Driver, Invoice, InvoiceStatus, PdfFile, Documents
 
 
 class DispatcherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dispatcher
         fields = '__all__'
+
+class DocumentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Documents
+        fields = ['id', 'name', 'type']
 
 
 class BoardSerializer(serializers.ModelSerializer):

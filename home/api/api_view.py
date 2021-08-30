@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from .serializers import *
+from ..models import Documents
 
 
 @api_view(['GET'])
@@ -298,6 +299,91 @@ def pdf_file(request):
             invoice = Invoice.objects.get(id=invoice_id)
             invoice.documents.remove(pdf)
             invoice.save()
+            data = {
+                "success": True,
+                "data": {
+                    "file_id": file_id
+                }
+            }
+        except Exception as err:
+            data = {
+                "success": False,
+                "error": "{}".format(err)
+            }
+        return Response(data)
+
+
+class DocumentsViewset(CustomViewSet):
+    queryset = Documents.objects.all()
+    serializer_class = DocumentsSerializer
+    search_fields = ('name',)
+    filter_fields = ('type',)
+
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+def document_file(request):
+    if request.method == "GET":
+        try:
+            doc_id = request.GET.get('doc_id')
+            doc = Invoice.objects.get(id=doc_id)
+            ser = PdfFileSerializers(doc.file.all(), many=True)
+            data = {
+                "success": True,
+                "data": ser.data
+            }
+        except Exception as err:
+            data = {
+                "success": False,
+                "error": "{}".format(err)
+            }
+        return Response(data)
+    elif request.method == "POST":
+        try:
+            file = request.data['file']
+            doc_id = request.data.get('doc_id')
+            doc = Documents.objects.get(id=doc_id)
+            pdf = PdfFile.objects.create(
+                file=file
+            )
+            doc.file.add(pdf)
+            doc.save()
+            ser = PdfFileSerializers(pdf)
+            data = {
+                "success": True,
+                "data": ser.data
+            }
+        except Exception as err:
+            data = {
+                "success": False,
+                "error": "{}".format(err)
+            }
+        return Response(data)
+    elif request.method == "PUT":
+        try:
+            file = request.data['file']
+            file_id = request.data.get('file_id')
+            pdf = PdfFile.objects.get(id=file_id)
+            pdf.file = file
+            pdf.save()
+            ser = PdfFileSerializers(pdf)
+            data = {
+                "success": True,
+                "data": ser.data
+            }
+        except Exception as err:
+            data = {
+                "success": False,
+                "error": "{}".format(err)
+            }
+        return Response(data)
+    else:
+        try:
+            file_id = request.data.get('file_id')
+            doc_id = request.data.get('doc_id')
+            pdf = PdfFile.objects.get(id=file_id)
+            doc = Documents.objects.get(id=doc_id)
+            doc.file.remove(pdf)
+            doc.save()
             data = {
                 "success": True,
                 "data": {

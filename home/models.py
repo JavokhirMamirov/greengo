@@ -7,6 +7,7 @@ from django.db import models
 class Dispatcher(models.Model):
     name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
 
@@ -14,14 +15,18 @@ class Dispatcher(models.Model):
 class Board(models.Model):
     name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
+
 
 class OwnerOperator(models.Model):
     name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
+
 
 class Driver(models.Model):
     name = models.CharField(max_length=255, null=True)
@@ -33,16 +38,19 @@ class Driver(models.Model):
     def __str__(self):
         return self.name
 
+
 class InvoiceStatus(models.Model):
     name = models.CharField(max_length=255, null=True)
     color = models.CharField(max_length=25, null=True)
     is_active = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
 
 
 class PdfFile(models.Model):
     file = models.FileField(upload_to='pdf/', null=True, blank=True)
+
 
 class Invoice(models.Model):
     dispatcher = models.ForeignKey(Dispatcher, on_delete=models.CASCADE)
@@ -64,3 +72,16 @@ class Invoice(models.Model):
         return self.board.name
 
 
+class Documents(models.Model):
+    types = (
+        ("1", "Documents"),
+        ("2","Drivers Aplications"),
+        ("3", "Existiong Trucks Docs")
+    )
+
+    name = models.CharField(max_length=255, null=True, blank=True)
+    file = models.ManyToManyField(PdfFile)
+    type = models.IntegerField(default=1,choices=types)
+
+    def __str__(self):
+        return self.name
