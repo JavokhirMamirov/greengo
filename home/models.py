@@ -74,14 +74,14 @@ class Invoice(models.Model):
 
 class Documents(models.Model):
     types = (
-        ("1", "Documents"),
-        ("2","Drivers Aplications"),
-        ("3", "Existiong Trucks Docs")
+        (1, "Documents"),
+        (2,"Drivers Aplications"),
+        (3, "Existiong Trucks Docs")
     )
 
     name = models.CharField(max_length=255, null=True, blank=True)
     file = models.ManyToManyField(PdfFile)
-    type = models.IntegerField(default=1,choices=types)
+    type = models.IntegerField(default=1, choices=types)
 
     def __str__(self):
         return self.name
