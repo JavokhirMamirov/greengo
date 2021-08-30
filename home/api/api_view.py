@@ -183,7 +183,7 @@ class CustomViewSet(viewsets.ModelViewSet):
 class DispatcherViewset(CustomViewSet):
     serializer_class = DispatcherSerializer
     queryset = Dispatcher.objects.all()
-    http_method_names = ['GET', "POST", "PUT"]
+    http_method_names = ['get', "post", "put"]
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('name',)
     filter_fields = ('is_active',)
@@ -192,7 +192,7 @@ class DispatcherViewset(CustomViewSet):
 class BoardViewset(CustomViewSet):
     serializer_class = BoardSerializer
     queryset = Board.objects.all()
-    http_method_names = ['GET', "POST", "PUT"]
+    http_method_names = ['get', "post", "put"]
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('name',)
     filter_fields = ('is_active',)
@@ -201,7 +201,7 @@ class BoardViewset(CustomViewSet):
 class OwnerOperatorViewset(CustomViewSet):
     serializer_class = OwnerOperatorSerializer
     queryset = OwnerOperator.objects.all()
-    http_method_names = ['GET', "POST", "PUT"]
+    http_method_names = ['get', "post", "put"]
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('name',)
     filter_fields = ('is_active',)
@@ -210,7 +210,7 @@ class OwnerOperatorViewset(CustomViewSet):
 class DriverViewset(CustomViewSet):
     serializer_class = DriverSerializer
     queryset = Driver.objects.all()
-    http_method_names = ['GET', "POST", "PUT"]
+    http_method_names = ['get', "post", "put"]
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('name',)
     filter_fields = ('is_active',)
@@ -220,7 +220,7 @@ class InvoiceViewset(CustomViewSet):
     serializer_class = InvoiceSerializer
     serializer_class__related = InvoiceRelatedSerializer
     queryset = Invoice.objects.all()
-    http_method_names = ['GET', "POST", "PUT"]
+    http_method_names = ['get', "post", "put"]
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filterset_fields = {
         'date': ['gte', 'lte', 'exact', 'gt', 'lt'],
@@ -237,7 +237,7 @@ class InvoiceStatusViewset(CustomViewSet):
     serializer_class = InvoiceStatusSerializer
     queryset = InvoiceStatus.objects.all()
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    http_method_names = ['GET', "POST", "PUT"]
+    http_method_names = ['get', "post", "put"]
     search_fields = ('name',)
     filter_fields = ('is_active',)
 
