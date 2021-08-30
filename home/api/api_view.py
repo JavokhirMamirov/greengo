@@ -1,4 +1,5 @@
 from django.contrib.auth.hashers import make_password
+from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -182,7 +183,7 @@ class CustomViewSet(viewsets.ModelViewSet):
 class DispatcherViewset(CustomViewSet):
     serializer_class = DispatcherSerializer
     queryset = Dispatcher.objects.all()
-    http_method_names = ['GET',"POST","PUT"]
+    http_method_names = ['GET', "POST", "PUT"]
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('name',)
     filter_fields = ('is_active',)
@@ -403,3 +404,94 @@ def document_file(request):
                 "error": "{}".format(err)
             }
         return Response(data)
+
+
+@api_view(["GET"])
+def Preformance(request):
+    try:
+        date_start = request.GET.get('date_start')
+        date_end = request.GET.get('date_end')
+        invoices = Invoice.objects.filter(
+            date__date__gte=date_start,
+            date__date__lte=date_end
+        )
+        dispatecher_preformance = []
+        driver_preformance = []
+        board_preformance = []
+
+        dispatchers = Dispatcher.objects.filter(is_active=True)
+        boards = Board.objects.filter(is_active=True)
+        drivers = Driver.objects.filter(is_active=True)
+
+        for board in boards:
+            trip_all_rate = invoices.filter(board=board).aggregate(total=Sum('trip_rate')).get('total')
+            if trip_all_rate is None:
+                trip_all_rate = 0
+
+            dt = {
+                "board": board.name,
+                "summa": trip_all_rate
+            }
+            board_preformance.append(dt)
+
+        for dispatcher in dispatchers:
+            total_milage = invoices.filter(dispatcher=dispatcher).aggregate(total=Sum('milage')).get('total')
+            total_dh = invoices.filter(dispatcher=dispatcher).aggregate(total=Sum('dh')).get('total')
+            total_trip_rate = invoices.filter(dispatcher=dispatcher).aggregate(total=Sum('trip_rate')).get('total')
+            if total_milage is None:
+                total_milage = 0
+            if total_dh is None:
+                total_dh = 0
+            if total_trip_rate is None:
+                total_trip_rate = 0
+
+            miles = total_milage + total_dh
+            if miles != 0:
+                avrage = total_trip_rate / miles
+            else:
+                avrage = 0
+
+            dt_dis = {
+                "dispatcher": dispatcher.name,
+                "miles": miles,
+                "gross": total_trip_rate,
+                "avrage": round(avrage,2)
+            }
+            dispatecher_preformance.append(dt_dis)
+
+        for driver in drivers:
+            total_milage = invoices.filter(driver=driver).aggregate(total=Sum('milage')).get('total')
+            total_dh = invoices.filter(driver=driver).aggregate(total=Sum('dh')).get('total')
+            total_trip_rate = invoices.filter(driver=driver).aggregate(total=Sum('trip_rate')).get('total')
+            if total_milage is None:
+                total_milage = 0
+            if total_dh is None:
+                total_dh = 0
+            if total_trip_rate is None:
+                total_trip_rate = 0
+
+            miles = total_milage + total_dh
+            if miles != 0:
+                avrage = total_trip_rate / miles
+            else:
+                avrage = 0
+
+            dt_driv = {
+                "driver": driver.name,
+                "miles": miles,
+                "gross": total_trip_rate,
+                "avrage": round(avrage,2)
+            }
+            driver_preformance.append(dt_driv)
+        data = {
+            "board": board_preformance,
+            "dispatcher": dispatecher_preformance,
+            "driver": driver_preformance
+        }
+
+    except Exception as err:
+        data = {
+            "success": False,
+            "error": "{}".format(err)
+        }
+    return Response(data)
