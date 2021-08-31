@@ -220,7 +220,6 @@ class InvoiceViewset(CustomViewSet):
     serializer_class = InvoiceSerializer
     serializer_class__related = InvoiceRelatedSerializer
     queryset = Invoice.objects.all()
-    http_method_names = ['get', "post", "put"]
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filterset_fields = {
         'date': ['gte', 'lte', 'exact', 'gt', 'lt'],
