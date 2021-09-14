@@ -36,6 +36,7 @@ class DriverStatus(models.Model):
         return self.name
 
 class Driver(models.Model):
+    owner = models.ForeignKey(OwnerOperator, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=255, null=True)
     phone = models.CharField(max_length=50, null=True, blank=True)
     trailer_number = models.IntegerField(default=0)

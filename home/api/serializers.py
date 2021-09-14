@@ -37,6 +37,7 @@ class DriverSerializer(serializers.ModelSerializer):
 
 class DriverWithStatusSerializer(serializers.ModelSerializer):
     status = DriverStatusSerializer(read_only=True)
+    owner = OwnerOperatorSerializer(read_only=True)
     class Meta:
         model = Driver
         fields = '__all__'
