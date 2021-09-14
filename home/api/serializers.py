@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Dispatcher, Board, OwnerOperator, Driver, Invoice, InvoiceStatus, PdfFile, Documents
+from ..models import Dispatcher, Board, OwnerOperator, Driver, Invoice, InvoiceStatus, PdfFile, Documents, DriverStatus
 
 
 class DispatcherSerializer(serializers.ModelSerializer):
@@ -25,8 +25,18 @@ class OwnerOperatorSerializer(serializers.ModelSerializer):
         model = OwnerOperator
         fields = '__all__'
 
+class DriverStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DriverStatus
+        fields = '__all__'
 
 class DriverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Driver
+        fields = '__all__'
+
+class DriverWithStatusSerializer(serializers.ModelSerializer):
+    status = DriverStatusSerializer(read_only=True)
     class Meta:
         model = Driver
         fields = '__all__'

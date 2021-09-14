@@ -1,6 +1,6 @@
 from rest_framework import routers
 from .api_view import DispatcherViewset, BoardViewset, OwnerOperatorViewset, DriverViewset, InvoiceViewset, \
-    InvoiceStatusViewset, DocumentsViewset
+    InvoiceStatusViewset, DocumentsViewset, DriverStatusViewset
 
 router = routers.DefaultRouter()
 
@@ -10,4 +10,5 @@ router.register("owner-operator", OwnerOperatorViewset)
 router.register("driver", DriverViewset)
 router.register("invoice", InvoiceViewset)
 router.register("invoice-status", InvoiceStatusViewset)
+router.register("driver-status", DriverStatusViewset)
 router.register("documents", DocumentsViewset)

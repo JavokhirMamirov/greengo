@@ -209,11 +209,12 @@ class OwnerOperatorViewset(CustomViewSet):
 
 class DriverViewset(CustomViewSet):
     serializer_class = DriverSerializer
+    serializer_class__related = DriverWithStatusSerializer
     queryset = Driver.objects.all()
     http_method_names = ['get', "post", "put"]
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('name',)
-    filter_fields = ('is_active',)
+    filter_fields = ('is_active','status')
 
 
 class InvoiceViewset(CustomViewSet):
@@ -235,6 +236,14 @@ class InvoiceViewset(CustomViewSet):
 class InvoiceStatusViewset(CustomViewSet):
     serializer_class = InvoiceStatusSerializer
     queryset = InvoiceStatus.objects.all()
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    http_method_names = ['get', "post", "put"]
+    search_fields = ('name',)
+    filter_fields = ('is_active',)
+
+class DriverStatusViewset(CustomViewSet):
+    serializer_class = DriverStatusSerializer
+    queryset = DriverStatus.objects.all()
     filter_backends = (DjangoFilterBackend, SearchFilter)
     http_method_names = ['get', "post", "put"]
     search_fields = ('name',)

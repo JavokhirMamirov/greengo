@@ -25,12 +25,17 @@ class DriverAdmin(admin.ModelAdmin):
         "phone",
         "track_number",
         "email",
+        'status',
         "is_active",
     ]
 
 
 @admin.register(InvoiceStatus)
 class InvoiceStatusAdmin(admin.ModelAdmin):
+    list_display = ['name', 'id', 'color', "is_active"]
+
+@admin.register(DriverStatus)
+class DriverStatusAdmin(admin.ModelAdmin):
     list_display = ['name', 'id', 'color', "is_active"]
 
 @admin.register(Documents)
