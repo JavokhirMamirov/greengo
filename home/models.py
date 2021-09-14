@@ -31,6 +31,7 @@ class OwnerOperator(models.Model):
 class Driver(models.Model):
     name = models.CharField(max_length=255, null=True)
     phone = models.CharField(max_length=50, null=True, blank=True)
+    trailer_number = models.IntegerField(default=0)
     track_number = models.CharField(max_length=20, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -66,7 +67,8 @@ class Invoice(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     date_end = models.DateTimeField(null=True, blank=True)
     documents = models.ManyToManyField(PdfFile)
-    status = models.ForeignKey(InvoiceStatus, on_delete=models.CASCADE, null=True)
+    status = models.ForeignKey(
+        InvoiceStatus, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.board.name
@@ -75,7 +77,7 @@ class Invoice(models.Model):
 class Documents(models.Model):
     types = (
         (1, "Documents"),
-        (2,"Drivers Aplications"),
+        (2, "Drivers Aplications"),
         (3, "Existiong Trucks Docs")
     )
 
