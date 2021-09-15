@@ -224,6 +224,7 @@ class InvoiceViewset(CustomViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filterset_fields = {
         'date': ['gte', 'lte', 'exact', 'gt', 'lt'],
+        'trip_rate': ['gte', 'lte', 'exact', 'gt', 'lt'],
         'dispatcher': ['exact'],
         'driver': ['exact'],
         'board': ['exact'],
