@@ -58,8 +58,7 @@ ROOT_URLCONF = 'greengo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,7 +70,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'greengo.wsgi.application'
 CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
 
@@ -90,7 +88,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASS': [
         'rest_framework.permissions.IsAuthenticated'
-    ]
+    ],
+    'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S",
+
 
 }
 # Password validation
