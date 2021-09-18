@@ -70,6 +70,10 @@ class InvoiceRelatedSerializer(serializers.ModelSerializer):
     driver = DriverSerializer(read_only=True)
     status = InvoiceStatusSerializer(read_only=True)
 
+
+
     class Meta:
         model = Invoice
         fields = '__all__'
+
+
