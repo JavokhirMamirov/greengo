@@ -214,7 +214,7 @@ class DriverViewset(CustomViewSet):
     http_method_names = ['get', "post", "put"]
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('name',)
-    filter_fields = ('is_active','status')
+    filter_fields = ('is_active', 'status')
 
 
 class InvoiceViewset(CustomViewSet):
@@ -231,7 +231,44 @@ class InvoiceViewset(CustomViewSet):
         'owner': ['exact'],
         'status': ['exact'],
     }
-    search_fields = ('dispatcher__name', 'driver__name', 'owner__name')
+    search_fields = ('dispatcher__name', 'driver__name', 'owner__name', 'origin', 'destination')
+
+    def list(self, request, *args, **kwargs):
+        try:
+            response = super().list(request, *args, **kwargs)
+            boards = Board.objects.filter(is_active=True)
+            data_t = []
+            for board in boards:
+
+                t_gross = 0
+                for data in response.data['data']:
+                    if data['board']['id'] == board.id:
+                        t_gross += float(data.get('trip_rate',0))
+                dt = {
+                    "id": board.id,
+                    "name": board.name,
+                    "gross": t_gross
+                }
+                data_t.append(dt)
+
+            total_gross = sum([float(data.get('trip_rate', 0)) for data in response.data['data']])
+            total_mile = sum([float(data.get('milage', 0)) for data in response.data['data']])
+            total_hd = sum([float(data.get('dh', 0)) for data in response.data['data']])
+            response.data['total_miles'] = total_mile+total_hd
+            response.data['total_gross'] = total_gross
+            if total_mile+total_hd > 0:
+                response.data['total_average'] = round(total_gross/(total_mile+total_hd), 2)
+            else:
+                response.data['total_average'] = 0
+
+            response.data['board_data'] = data_t
+            return response
+        except Exception as err:
+            data = {
+                "success":False,
+                "error":"{}".format(err)
+            }
+            return data
 
 
 class InvoiceStatusViewset(CustomViewSet):
@@ -241,6 +278,7 @@ class InvoiceStatusViewset(CustomViewSet):
     http_method_names = ['get', "post", "put"]
     search_fields = ('name',)
     filter_fields = ('is_active',)
+
 
 class DriverStatusViewset(CustomViewSet):
     serializer_class = DriverStatusSerializer
@@ -464,7 +502,7 @@ def Preformance(request):
                 "dispatcher": dispatcher.name,
                 "miles": miles,
                 "gross": total_trip_rate,
-                "avrage": round(avrage,2)
+                "avrage": round(avrage, 2)
             }
             dispatecher_preformance.append(dt_dis)
 
@@ -489,7 +527,7 @@ def Preformance(request):
                 "driver": driver.name,
                 "miles": miles,
                 "gross": total_trip_rate,
-                "avrage": round(avrage,2)
+                "avrage": round(avrage, 2)
             }
             driver_preformance.append(dt_driv)
         data = {
