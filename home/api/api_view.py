@@ -94,6 +94,7 @@ class CustomViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
+            request.data['company'] = request.user.id
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             obj = serializer.save()
@@ -115,6 +116,7 @@ class CustomViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         try:
             queryset = self.filter_queryset(self.get_queryset())
+            queryset = queryset.filter(company_id=request.user.id)
 
             page = self.paginate_queryset(queryset)
             if page is not None:

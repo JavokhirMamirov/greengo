@@ -1,41 +1,58 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 # Create your models here.
 
 
 class Dispatcher(models.Model):
+    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        try:
+            return self.name
+        except:
+            return "-"
 
 
 class Board(models.Model):
+    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        try:
+            return self.name
+        except:
+            return "-"
 
 
 class OwnerOperator(models.Model):
+    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        try:
+            return self.name
+        except:
+            return "-"
 
 class DriverStatus(models.Model):
+    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True)
     color = models.CharField(max_length=25, null=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        try:
+            return self.name
+        except:
+            return "-"
 
 class Driver(models.Model):
+    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     owner = models.ForeignKey(OwnerOperator, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=255, null=True)
     phone = models.CharField(max_length=50, null=True, blank=True)
@@ -46,25 +63,34 @@ class Driver(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        try:
+            return self.name
+        except:
+            return "-"
 
 
 class InvoiceStatus(models.Model):
+    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True)
     color = models.CharField(max_length=25, null=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        try:
+            return self.name
+        except:
+            return "-"
 
 
 
 
 class PdfFile(models.Model):
+    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     file = models.FileField(upload_to='pdf/', null=True, blank=True)
 
 
 class Invoice(models.Model):
+    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     dispatcher = models.ForeignKey(Dispatcher, on_delete=models.CASCADE)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     owner = models.ForeignKey(OwnerOperator, on_delete=models.CASCADE)
@@ -91,10 +117,13 @@ class Documents(models.Model):
         (2, "Drivers Aplications"),
         (3, "Existiong Trucks Docs")
     )
-
+    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True, blank=True)
     file = models.ManyToManyField(PdfFile)
     type = models.IntegerField(default=1, choices=types)
 
     def __str__(self):
-        return self.name
+        try:
+            return self.name
+        except:
+            return "-"
