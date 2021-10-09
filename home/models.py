@@ -43,6 +43,7 @@ class DriverStatus(models.Model):
     company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, null=True)
     color = models.CharField(max_length=25, null=True)
+    time = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -61,6 +62,7 @@ class Driver(models.Model):
     email = models.EmailField(null=True, blank=True)
     status = models.ForeignKey(DriverStatus, on_delete=models.CASCADE, null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    update_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         try:

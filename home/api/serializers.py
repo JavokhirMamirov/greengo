@@ -38,9 +38,30 @@ class DriverSerializer(serializers.ModelSerializer):
 class DriverWithStatusSerializer(serializers.ModelSerializer):
     status = DriverStatusSerializer(read_only=True)
     owner = OwnerOperatorSerializer(read_only=True)
+    destination = serializers.SerializerMethodField()
     class Meta:
         model = Driver
-        fields = '__all__'
+        fields = [
+            "id",
+            "company",
+            "owner",
+            "name",
+            "phone",
+            "trailer_number",
+            "track_number",
+            "email",
+            "status",
+            "is_active",
+            "update_time",
+            "destination",
+        ]
+
+    def get_destination(self, obj):
+        inv = Invoice.objects.filter(driver=obj).last()
+        if inv is not None:
+            return inv.destination
+        else:
+            return None
 
 
 class InvoiceStatusSerializer(serializers.ModelSerializer):

@@ -245,7 +245,7 @@ class InvoiceViewset(CustomViewSet):
                 t_gross = 0
                 for data in response.data['data']:
                     if data['board']['id'] == board.id:
-                        t_gross += float(data.get('trip_rate',0))
+                        t_gross += float(data.get('trip_rate', 0))
                 dt = {
                     "id": board.id,
                     "name": board.name,
@@ -256,10 +256,10 @@ class InvoiceViewset(CustomViewSet):
             total_gross = sum([float(data.get('trip_rate', 0)) for data in response.data['data']])
             total_mile = sum([float(data.get('milage', 0)) for data in response.data['data']])
             total_hd = sum([float(data.get('dh', 0)) for data in response.data['data']])
-            response.data['total_miles'] = total_mile+total_hd
+            response.data['total_miles'] = total_mile + total_hd
             response.data['total_gross'] = total_gross
-            if total_mile+total_hd > 0:
-                response.data['total_average'] = round(total_gross/(total_mile+total_hd), 2)
+            if total_mile + total_hd > 0:
+                response.data['total_average'] = round(total_gross / (total_mile + total_hd), 2)
             else:
                 response.data['total_average'] = 0
 
@@ -267,8 +267,8 @@ class InvoiceViewset(CustomViewSet):
             return response
         except Exception as err:
             data = {
-                "success":False,
-                "error":"{}".format(err)
+                "success": False,
+                "error": "{}".format(err)
             }
             return data
 
@@ -538,6 +538,27 @@ def Preformance(request):
             "driver": driver_preformance
         }
 
+    except Exception as err:
+        data = {
+            "success": False,
+            "error": "{}".format(err)
+        }
+    return Response(data)
+
+
+@api_view(["POST"])
+def DriverActivity(request):
+    try:
+        status = request.data['status']
+        driver_id = request.data['driver']
+        dv_status = DriverStatus.objects.get(id=status)
+        dv = Driver.objects.get(id=driver_id)
+        dv.status = dv_status
+        dv.save()
+        data = {
+            "success": True,
+            "data": DriverWithStatusSerializer(dv).data
+        }
     except Exception as err:
         data = {
             "success": False,
