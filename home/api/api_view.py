@@ -222,7 +222,7 @@ class DriverViewset(CustomViewSet):
 class InvoiceViewset(CustomViewSet):
     serializer_class = InvoiceSerializer
     serializer_class__related = InvoiceRelatedSerializer
-    queryset = Invoice.objects.all()
+    queryset = Invoice.objects.all().order_by('-id')
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filterset_fields = {
         'date': ['gte', 'lte', 'exact', 'gt', 'lt'],
