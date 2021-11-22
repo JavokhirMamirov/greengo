@@ -87,7 +87,7 @@ class InvoiceStatus(models.Model):
 
 
 class PdfFile(models.Model):
-    company = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, null=True, blank=True)
     file = models.FileField(upload_to='pdf/', null=True, blank=True)
 
 

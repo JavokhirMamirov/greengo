@@ -181,6 +181,22 @@ class CustomViewSet(viewsets.ModelViewSet):
 
         return Response(data)
 
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            instance.delete()
+            data = {
+                "success": True,
+                "data": "Instance Deleted!"
+            }
+
+        except Exception as err:
+            data = {
+                "success": False,
+                "error": "{}".format(err)
+            }
+        return Response(data)
+
 
 class DispatcherViewset(CustomViewSet):
     serializer_class = DispatcherSerializer
@@ -291,6 +307,30 @@ class DriverStatusViewset(CustomViewSet):
     filter_fields = ('is_active',)
 
 
+@api_view(['POST'])
+def delete_pdf(request):
+    try:
+        file_id = request.data['file_id']
+        invoice_id = request.POST['invoice_id']
+        pdf = PdfFile.objects.get(id=file_id)
+        invoice = Invoice.objects.get(id=invoice_id)
+        invoice.documents.remove(pdf)
+        invoice.save()
+        pdf.delete()
+        data = {
+            "success": True,
+            "data": {
+                "file_id": file_id
+            }
+        }
+    except Exception as err:
+        data = {
+            "success": False,
+            "error": "{}".format(err)
+        }
+    return Response(data)
+
+
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def pdf_file(request):
     if request.method == "GET":
@@ -314,7 +354,8 @@ def pdf_file(request):
             invoice_id = request.data.get('invoice_id')
             invoice = Invoice.objects.get(id=invoice_id)
             pdf = PdfFile.objects.create(
-                file=file
+                file=file,
+                name=file.name
             )
             invoice.documents.add(pdf)
             invoice.save()
@@ -347,18 +388,20 @@ def pdf_file(request):
                 "error": "{}".format(err)
             }
         return Response(data)
-    else:
+    elif request.method == "DELETE":
         try:
-            file_id = request.data.get('file_id')
-            invoice_id = request.data.get('invoice_id')
-            pdf = PdfFile.objects.get(id=file_id)
-            invoice = Invoice.objects.get(id=invoice_id)
-            invoice.documents.remove(pdf)
-            invoice.save()
+            # file_id = request.data['file_id']
+            file_id = 1
+            # invoice_id = request.POST['invoice_id']
+            # pdf = PdfFile.objects.get(id=file_id)
+            # invoice = Invoice.objects.get(id=invoice_id)
+            # invoice.documents.remove(pdf)
+            # invoice.save()
+            # pdf.delete()
             data = {
                 "success": True,
                 "data": {
-                    "file_id": file_id
+                    "file_id": f"{request.DELETE}"
                 }
             }
         except Exception as err:

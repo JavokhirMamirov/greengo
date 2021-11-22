@@ -90,11 +90,11 @@ class InvoiceRelatedSerializer(serializers.ModelSerializer):
     owner = OwnerOperatorSerializer(read_only=True)
     driver = DriverSerializer(read_only=True)
     status = InvoiceStatusSerializer(read_only=True)
+    documents = PdfFileSerializers(read_only=True, many=True)
 
 
 
     class Meta:
         model = Invoice
         fields = '__all__'
-
 
