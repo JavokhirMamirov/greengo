@@ -544,7 +544,7 @@ def Preformance(request):
                 avrage = 0
 
             dt_dis = {
-                "dispatcher": dispatcher.name,
+                "name": dispatcher.name,
                 "miles": miles,
                 "gross": total_trip_rate,
                 "avrage": round(avrage, 2)
@@ -569,7 +569,7 @@ def Preformance(request):
                 avrage = 0
 
             dt_driv = {
-                "driver": driver.name,
+                "name": driver.name,
                 "miles": miles,
                 "gross": total_trip_rate,
                 "avrage": round(avrage, 2)
