@@ -11,7 +11,20 @@ class DispatcherSerializer(serializers.ModelSerializer):
 class DocumentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Documents
-        fields = ['id', 'name', 'type']
+        fields = "__all__"
+        read_only_fields = ['file', ]
+
+class PdfFileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = PdfFile
+        fields = "__all__"
+
+
+class DocumentsManySerializer(serializers.ModelSerializer):
+    file = PdfFileSerializers(many=True, read_only=True)
+    class Meta:
+        model = Documents
+        fields = "__all__"
 
 
 class BoardSerializer(serializers.ModelSerializer):
@@ -77,10 +90,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         read_only_fields = ['documents', ]
 
 
-class PdfFileSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = PdfFile
-        fields = "__all__"
+
 
 
 

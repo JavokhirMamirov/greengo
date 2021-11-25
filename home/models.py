@@ -128,4 +128,4 @@ class Documents(models.Model):
         try:
             return self.name
         except:
-            return "-"
+            return "test"

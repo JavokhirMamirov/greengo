@@ -94,7 +94,10 @@ class CustomViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
+            # mutable = request.data._mutable
+            # request.data._mutable = True
             request.data['company'] = request.user.id
+            # request.data._mutable = mutable
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             obj = serializer.save()
@@ -311,11 +314,34 @@ class DriverStatusViewset(CustomViewSet):
 def delete_pdf(request):
     try:
         file_id = request.data['file_id']
-        invoice_id = request.POST['invoice_id']
+        invoice_id = request.data.get('invoice_id')
         pdf = PdfFile.objects.get(id=file_id)
         invoice = Invoice.objects.get(id=invoice_id)
         invoice.documents.remove(pdf)
         invoice.save()
+        pdf.delete()
+        data = {
+            "success": True,
+            "data": {
+                "file_id": file_id
+            }
+        }
+    except Exception as err:
+        data = {
+            "success": False,
+            "error": "{}".format(err)
+        }
+    return Response(data)
+
+@api_view(['POST'])
+def delete_doc_file(request):
+    try:
+        file_id = request.data.get('file_id')
+        doc_id = request.data.get('doc_id')
+        pdf = PdfFile.objects.get(id=file_id)
+        doc = Documents.objects.get(id=doc_id)
+        doc.file.remove(pdf)
+        doc.save()
         pdf.delete()
         data = {
             "success": True,
@@ -415,6 +441,7 @@ def pdf_file(request):
 class DocumentsViewset(CustomViewSet):
     queryset = Documents.objects.all()
     serializer_class = DocumentsSerializer
+    serializer_class__related = DocumentsManySerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('name',)
     filter_fields = ('type',)
@@ -443,7 +470,9 @@ def document_file(request):
             doc_id = request.data.get('doc_id')
             doc = Documents.objects.get(id=doc_id)
             pdf = PdfFile.objects.create(
-                file=file
+                file=file,
+                name=file.name
+
             )
             doc.file.add(pdf)
             doc.save()
