@@ -23,7 +23,7 @@ RUN pip install -r requirements.txt
 # copy entrypoint.sh
 COPY ./entrypoint.sh .
 RUN sed -i 's/\r$//g' /app/entrypoint.sh
-RUN sudo chmod 775 /app/entrypoint.sh
+RUN chmod 775 /app/entrypoint.sh
 
 # copy project
 COPY . .
