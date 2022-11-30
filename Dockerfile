@@ -30,4 +30,4 @@ COPY . .
 
 
 # run entrypoint.sh
-ENTRYPOINT ["bash", "-c", "/app/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
